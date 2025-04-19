@@ -26,4 +26,5 @@ public class PlayerMovement : MonoBehaviour
         Camera.main.transform.position = this.transform.position - Vector3.forward;
 
     }
+
 }

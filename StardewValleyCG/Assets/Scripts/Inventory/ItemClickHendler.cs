@@ -1,17 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using System;
 
 public class ItemClickHendler : MonoBehaviour
 {
+    public Inventory _Inventory;
+    private InteractableItemBase AttachedItem
+    {
+        get
+        {
+            ItemDragHandler dragHandler =
+            gameObject.transform.Find("ItemImage").GetComponent<ItemDragHandler>();
+
+            return (InteractableItemBase)dragHandler.item;
+        }
+    }
+
     public void OnItemClicked()
     {
-        ItemDragHandler dragHandler = gameObject.transform.Find("ItemImage").GetComponent<ItemDragHandler>();
+        InteractableItemBase item = AttachedItem;
 
-        IInventoryItem item = dragHandler.item;
-
-        Debug.LogError("ItemImage 오브젝트를 찾을 수 없습니다."); 
-        
-        item.OnUse();
+        if (item != null)
+        {
+            _Inventory.UseItem((IInventoryItem)item);
+        }
     }
+
 }

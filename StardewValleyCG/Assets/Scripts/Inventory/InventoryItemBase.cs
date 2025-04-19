@@ -1,18 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryItemBase : MonoBehaviour
+public class InteractableItemBase : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public virtual string Name => "_vase item_";
+
+    [SerializeField]
+    protected Sprite _Image;
+
+    public string InteractText = "Press F to pickup the item";
+
+    public virtual Sprite Image => _Image;
+
+    public virtual void OnDrop()
     {
-        
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 1000))
+        {
+            gameObject.SetActive(true);
+            transform.position = hit.point;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void OnPickup()
     {
-        
+        gameObject.SetActive(false);
     }
+
+    public virtual void OnUse() { }
 }

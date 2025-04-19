@@ -11,6 +11,7 @@ public class Inventory : MonoBehaviour
 
     public event EventHandler<InventoryEventArgs> ItemAdded;    //아이템 추가
     public event EventHandler<InventoryEventArgs> ItemRemoved;  //아이템 버리기
+    public event EventHandler<InventoryEventArgs> ItemUsed;  //아이템 버리기
 
     public void AddItem(IInventoryItem item)
     {
@@ -30,6 +31,14 @@ public class Inventory : MonoBehaviour
                     ItemAdded(this, new InventoryEventArgs(item));
                 }
             }
+        }
+    }
+
+    internal void UseItem(IInventoryItem item)
+    {
+        if(ItemUsed != null)
+        {
+            ItemUsed(this, new InventoryEventArgs(item));
         }
     }
 

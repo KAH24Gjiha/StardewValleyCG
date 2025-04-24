@@ -28,4 +28,5 @@ public class InteractableItemBase : MonoBehaviour
     }
 
     public virtual void OnUse() { }
+
 }

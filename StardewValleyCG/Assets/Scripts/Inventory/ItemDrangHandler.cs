@@ -6,6 +6,8 @@ public class ItemDragHandler : MonoBehaviour, IDragHandler, IEndDragHandler
 {
 
     public IInventoryItem item {  get; set; }
+    public int OriginSlotId { get; internal set; }
+
     public void OnDrag(PointerEventData eventData)
     {
         transform.position = Input.mousePosition;
@@ -15,4 +17,6 @@ public class ItemDragHandler : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         transform.localPosition = Vector3.zero;
     }
+
+
 }

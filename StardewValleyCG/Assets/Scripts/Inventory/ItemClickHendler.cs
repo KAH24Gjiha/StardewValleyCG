@@ -9,8 +9,7 @@ public class ItemClickHendler : MonoBehaviour
     {
         get
         {
-            ItemDragHandler dragHandler =
-            gameObject.transform.Find("ItemImage").GetComponent<ItemDragHandler>();
+            ItemDragHandler dragHandler = gameObject.transform.Find("ItemImage").GetComponent<ItemDragHandler>();
 
             return (InteractableItemBase)dragHandler.item;
         }

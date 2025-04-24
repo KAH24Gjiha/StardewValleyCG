@@ -7,36 +7,62 @@ public class Inventory : MonoBehaviour
 {
     private const int SLOTS = 12;   //최대 슬롯
 
-    private List<IInventoryItem>  mItems = new List<IInventoryItem>();
+    private List<IInventoryItem> mItems = new List<IInventoryItem>();
+    private List<InventorySlot> mSlots = new List<InventorySlot>();
 
     public event EventHandler<InventoryEventArgs> ItemAdded;    //아이템 추가
     public event EventHandler<InventoryEventArgs> ItemRemoved;  //아이템 버리기
     public event EventHandler<InventoryEventArgs> ItemUsed;  //아이템 버리기
 
+    public Inventory()
+    {
+        for (int i = 0; i < SLOTS; i++)
+        {
+            mSlots.Add(new InventorySlot(i));
+        }
+    }
+
+    private InventorySlot FindStackableSlot(IInventoryItem item)
+    {
+        foreach (InventorySlot slot in mSlots)
+        {
+            if (slot.IsStackable(item))
+                return slot;
+        }
+        return null;
+    }
+
+    private InventorySlot FindNextEmptySlot()
+    {
+        foreach (InventorySlot slot in mSlots)
+        {
+            if (slot.IsEmpty)
+                return slot;
+        }
+        return null;
+    }
     public void AddItem(IInventoryItem item)
     {
-        if(mItems.Count < SLOTS)
+
+        InventorySlot freeSlot = FindStackableSlot(item);
+        if (freeSlot == null)
         {
-            Collider2D collider = (item as MonoBehaviour).GetComponent< Collider2D>();
-            if(collider.enabled)
+            freeSlot = FindNextEmptySlot();
+        }
+        if (freeSlot != null)
+        {
+            freeSlot.AddItem(item);
+
+            if (ItemAdded != null)
             {
-                collider.enabled = false;
-
-                mItems.Add(item); //인벤토리 리스트에 추가
-
-                item.OnPickup();    //아이템의 획득 처리 
-
-                if (ItemAdded != null)
-                {
-                    ItemAdded(this, new InventoryEventArgs(item));
-                }
+                ItemAdded(this, new InventoryEventArgs(item));
             }
         }
     }
 
     internal void UseItem(IInventoryItem item)
     {
-        if(ItemUsed != null)
+        if (ItemUsed != null)
         {
             ItemUsed(this, new InventoryEventArgs(item));
         }
@@ -44,22 +70,17 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItem(IInventoryItem item)
     {
-        if (mItems.Contains(item))
+        foreach (InventorySlot slot in mSlots)
         {
-            mItems.Remove(item);
-
-            item.OnDrop();
-
-            Collider2D collider = (item as MonoBehaviour).GetComponent< Collider2D>();
-            if (collider != null)
+            if (slot.Remove(item))
             {
-                collider.enabled = true;
-            }
-
-            if (ItemRemoved != null)
-            {
-                ItemRemoved(this, new InventoryEventArgs(item));
+                if (ItemRemoved != null)
+                {
+                    ItemRemoved(this, new InventoryEventArgs(item));
+                }
+                break;
             }
         }
     }
+
 }

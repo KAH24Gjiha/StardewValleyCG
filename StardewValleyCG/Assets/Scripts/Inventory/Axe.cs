@@ -14,6 +14,7 @@ public class Axe : InteractableItemBase
         gameObject.SetActive(false);
     }
 
+    // 아이템을 드롭했을 때 호출
     public override void OnDrop()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);

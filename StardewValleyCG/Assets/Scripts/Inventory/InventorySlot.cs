@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot
 {
     private Stack<IInventoryItem> mItemStack = new Stack<IInventoryItem>();
 

@@ -14,5 +14,22 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
         {
             Debug.Log("Drop item");
         }
+
+        Transform imageTransform = gameObject.transform.Find("ItemImage");
+
+        if (imageTransform == null)
+        {
+            Debug.LogWarning("ItemImage 오브젝트를 찾을 수 없습니다.");
+            return;
+        }
+
+        ItemDragHandler dragHandler = imageTransform.GetComponent<ItemDragHandler>();
+
+        if (dragHandler == null)
+        {
+            Debug.LogWarning("ItemDragHandler 컴포넌트가 없습니다.");
+            return;
+        }
+
     }
 }
